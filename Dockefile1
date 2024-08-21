@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Venkat310502-msd/Dockerdummy.git'
+            }
+        }
+        stage ("Build") {
+            steps {
+                sh "docker build -t venkat537/myrepo:image1 ."
+            }
+        }
+        stage ("push") {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'Dockerhub') {
+                    }
+                }
+            }
+        }
+        stage ("deploy") {
+            steps {
+                sh "docker run -itd --name venkat -p 8081:80 venkat537/myrepo:image1"
+            }
+        }
+    }
+}
